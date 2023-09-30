@@ -67,6 +67,12 @@ const commands = [
             },
         ],
     },
+
+    // 'embed' command
+    {
+        name: 'embed',
+        description: 'Send an embed!',
+    }, 
 ];
 
 // Creating a new instance of the REST class, specifying the API version and setting the token from the environment variable

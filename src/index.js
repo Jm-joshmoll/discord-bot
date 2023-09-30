@@ -2,7 +2,7 @@
 require('dotenv').config()
 
 // Import necessary modules and classess from discord.js library
-const { Client, Events, GatewayIntentBits, SlashCommandBuilder, EmbedBuilder, PermissionsBitField, Permissions } = require('discord.js');
+const { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, Client, EmbedBuilder, Events, Permissions, PermissionsBitField, GatewayIntentBits, SlashCommandBuilder, ButtonStyle } = require('discord.js');
 
 // Gets the current date and time
 let currentDateTime = new Date();
@@ -17,9 +17,6 @@ const client = new Client({
     ]
 });
 
-// Log the bot into discord using the bot token
-client.login(process.env.TOKEN);
-
 // Event listener that triggers once the bot is ready after logging
 client.once(Events.ClientReady, c => {
 
@@ -33,7 +30,6 @@ client.once(Events.ClientReady, c => {
 
 // Event listener that triggers when an interaction (like slash commands) is created
 client.on('interactionCreate', (interaction) => {
-
     // If it's not a chat input command, exit early
     if(!interaction.isChatInputCommand()) return;
 
@@ -86,7 +82,31 @@ client.on('interactionCreate', (interaction) => {
             interaction.reply('Have a great day!');
         }
         console.log(`${user.username} ran the bye command`);
-    }    
+    }
+    
+    // Handle the 'embed' command
+    if(interaction.commandName === 'embed') {
+        // Exampled embedder that links to discord.js documentation
+        const exambleEmbed = new EmbedBuilder()
+        .setColor('Random')
+        .setTitle('Some title')
+        .setURL('https://discord.js.org/')
+        .setAuthor({ name: 'Some name', iconURL: 'https://i.imgur.com/AfFp7pu.png', url: 'https://discord.js.org' })
+        .setDescription('Some description here')
+        .setThumbnail('https://i.imgur.com/AfFp7pu.png')
+        .addFields(
+            { name: 'Regular field title', value: 'Some value here' },
+            { name: '\u200B', value: '\u200B' },
+            { name: 'Inline field title', value: 'Some value here', inline: true },
+            { name: 'Inline field title', value: 'Some value here', inline: true },
+            { name: 'Inline field title', value: 'Some value here', inline: true },
+        )
+        .setImage('https://i.imgur.com/AfFp7pu.png')
+        .setTimestamp()
+        .setFooter({ text: 'Some footer text here', iconURL: 'https://i.imgur.com/AfFp7pu.png' });
+
+        interaction.reply({ embeds: [exambleEmbed] })
+    } 
 });
 
 // Event listener for messages 
@@ -100,3 +120,6 @@ client.on('messageCreate', message => {
 
 client.on('error', console.error);
 client.on('warn', console.warn);
+
+// Log the bot into discord using the bot token
+client.login(process.env.TOKEN);
