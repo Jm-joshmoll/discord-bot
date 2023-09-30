@@ -2,7 +2,7 @@
 require('dotenv').config()
 
 // Import necessary modules and classess from discord.js library
-const { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, Client, EmbedBuilder, Events, Permissions, PermissionsBitField, GatewayIntentBits, SlashCommandBuilder, ButtonStyle } = require('discord.js');
+const { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, Client, EmbedBuilder, Events, Permissions, PermissionsBitField, GatewayIntentBits, SlashCommandBuilder, ButtonStyle, ActivityType } = require('discord.js');
 
 // Gets the current date and time
 let currentDateTime = new Date();
@@ -17,6 +17,27 @@ const client = new Client({
     ]
 });
 
+let status = [
+    {
+        name: 'lastest build: ' + currentDateTime.toLocaleString(),
+        type: ActivityType.Streaming,
+        url: 'https://www.youtube.com/watch?v=gbJRyal8fa0',    
+    },
+    {
+        name: 'lastest build: ' + currentDateTime.toLocaleString(),
+        type: ActivityType.Watching,
+    },
+    {
+        name: 'lastest build: ' + currentDateTime.toLocaleString(),
+        type: ActivityType.Listening,
+        url: 'https://www.youtube.com/watch?v=gbJRyal8fa0',    
+    },
+    {
+        name: 'lastest build: ' + currentDateTime.toLocaleString(),
+        type: ActivityType.Playing,   
+    },
+];
+
 // Event listener that triggers once the bot is ready after logging
 client.once(Events.ClientReady, c => {
 
@@ -24,8 +45,10 @@ client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag} @ ` + currentDateTime.toLocaleString());
 
     // Set the bot's status
-    client.user.setActivity('lastest build: ' + currentDateTime.toLocaleString())
-
+    setInterval(() => {
+        let random = Math.floor(Math.random() * status.length)
+        client.user.setActivity(status[random]);
+    }, 15000);
 });
 
 // Event listener that triggers when an interaction (like slash commands) is created
@@ -57,7 +80,7 @@ client.on('interactionCreate', async(interaction) => {
     } catch (error) {
         console.log(error);
     }
-        
+
     // If it's not a chat input command, exit early
     if(!interaction.isChatInputCommand()) return;
 
