@@ -29,7 +29,35 @@ client.once(Events.ClientReady, c => {
 });
 
 // Event listener that triggers when an interaction (like slash commands) is created
-client.on('interactionCreate', (interaction) => {
+client.on('interactionCreate', async(interaction) => {
+    // Handles the buttons for role management
+    try {
+        if (interaction.isButton()) {
+            await interaction.deferReply({ ephemeral:true });
+        
+            const role = interaction.guild.roles.cache.get(interaction.customId);
+            if (!role) {
+                interaction.editReply({
+                content: "I couldn't find that role",
+                })
+                return;
+            }
+                
+            const hasRole = interaction.member.roles.cache.has(role.id);
+            if (hasRole) {
+                await interaction.member.roles.remove(role);
+                await interaction.editReply(`The role ${role} has been removed.`);
+                return;
+            }
+        
+            await interaction.member.roles.add(role);
+            await interaction.editReply(`The role ${role} has been added.`);
+        }
+
+    } catch (error) {
+        console.log(error);
+    }
+        
     // If it's not a chat input command, exit early
     if(!interaction.isChatInputCommand()) return;
 
