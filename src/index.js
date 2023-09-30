@@ -2,7 +2,7 @@
 require('dotenv').config()
 
 // Import necessary modules and classess from discord.js library
-const { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, Client, EmbedBuilder, Events, Permissions, PermissionsBitField, GatewayIntentBits, SlashCommandBuilder, ButtonStyle } = require('discord.js');
+const { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, Client, EmbedBuilder, Events, Permissions, PermissionsBitField, GatewayIntentBits, SlashCommandBuilder, ButtonStyle, ActivityType } = require('discord.js');
 
 // Gets the current date and time
 let currentDateTime = new Date();
@@ -24,7 +24,11 @@ client.once(Events.ClientReady, c => {
 	console.log(`Ready! Logged in as ${c.user.tag} @ ` + currentDateTime.toLocaleString());
 
     // Set the bot's status
-    client.user.setActivity('lastest build: ' + currentDateTime.toLocaleString())
+    client.user.setActivity({
+        name: 'lastest build: ' + currentDateTime.toLocaleString(),
+        type: ActivityType.Streaming,
+        url: 'https://www.youtube.com/watch?v=gbJRyal8fa0'
+    })
 
 });
 
