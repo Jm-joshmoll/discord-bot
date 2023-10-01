@@ -14,7 +14,7 @@ const client = new Client({
     ]
 });
 
-// Create list of roles avaialable with their label and role id attached
+// Create list of roles available with their label and role id attached
 const roles = [
     {
         id: '1157588429639524435',
@@ -38,7 +38,7 @@ const roles = [
     },
 ];
 
-// When the bot is ready 
+// Event listener when the bot is ready 
 client.on('ready', async(c) => {
     // Try building the role buttons
     try {
