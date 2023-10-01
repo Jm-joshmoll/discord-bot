@@ -14,7 +14,7 @@ module.exports = async (client, interaction) => {
     // Tries to run the command
     try {
          // Find the invoked command in the local commands list
-        const commandObject = localCommands.find( (cmd) => cmd.name === interaction.commandName);
+        const commandObject = localCommands.find( (cmd) => cmd.name === interaction.commandName );
         
         // If command not found, exit
         if (!commandObject) return;
