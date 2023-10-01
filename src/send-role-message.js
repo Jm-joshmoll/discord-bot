@@ -2,7 +2,7 @@
 require('dotenv').config()
 
 // Import necessary modules and classess from discord.js library
-const { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, Events, Permissions, PermissionsBitField, GatewayIntentBits } = require('discord.js');
+const { ActionRowBuilder, ButtonBuilder, ButtonStyle, Client, GatewayIntentBits } = require('discord.js');
 
 // Create a new Discord client instance with specific intents (permissions to perform certain actions)
 const client = new Client({ 
@@ -38,29 +38,39 @@ const roles = [
     },
 ];
 
+// When the bot is ready 
 client.on('ready', async(c) => {
+    // Try building the role buttons
     try {
-        const channel = await client.channels.cache.get('1157589694817771570');
+        // Fetch the channel that we want the message to be using the channel id 
+        const CHANNEL_ID = '1157589694817771570';
+        const channel = await client.channels.cache.get(CHANNEL_ID);
+
+        // If channel not found exit
         if (!channel) return;
         
+        // Create the row below message for the buttons and build each button
         const row = new ActionRowBuilder();
-    
         roles.forEach((role) => {
             row.components.push(
                 new ButtonBuilder().setCustomId(role.id).setLabel(role.label).setStyle(ButtonStyle.Primary)
             )
         })
-    
+        
+        // Send message and row to channel
         await channel.send({
-            content: 'Claim or remove a role below',
+            content: 'Click buttons below to add or remove a role',
             components: [row]
         })
+        // Exit
         process.exit();
-        
+    
+    // Log any errors
     } catch (error) {
         console.log(error);
         
     }
 });
 
+// Login into bot using the bot TOKEN from .env
 client.login(process.env.TOKEN);

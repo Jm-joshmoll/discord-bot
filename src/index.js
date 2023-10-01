@@ -2,7 +2,7 @@
 require('dotenv').config()
 
 // Import necessary modules and classess from discord.js library
-const { ActionRowBuilder, AttachmentBuilder, ButtonBuilder, Client, EmbedBuilder, Events, Permissions, PermissionsBitField, GatewayIntentBits, SlashCommandBuilder, ButtonStyle, ActivityType } = require('discord.js');
+const { ActivityType, Client, EmbedBuilder, Events, GatewayIntentBits } = require('discord.js');
 
 // Gets the current date and time
 let currentDateTime = new Date();
@@ -21,7 +21,7 @@ const client = new Client({
 client.once(Events.ClientReady, c => {
 
     // Logs that is ready to console
-	console.log(`Ready! Logged in as ${c.user.tag} @ ` + currentDateTime.toLocaleString());
+	console.log(currentDateTime.toLocaleString() + `: Logged in as ${c.user.tag}`);
 
     // Set the bot's status
     client.user.setActivity({
@@ -32,13 +32,15 @@ client.once(Events.ClientReady, c => {
 
 });
 
-// Event listener that triggers when an interaction (like slash commands) is created
+// Event listener that triggers when an interaction is created (like a slash command) 
 client.on('interactionCreate', async(interaction) => {
+
     // Handles the buttons for role management
     try {
         if (interaction.isButton()) {
             await interaction.deferReply({ ephemeral:true });
-        
+            
+            // Check to see the role exists
             const role = interaction.guild.roles.cache.get(interaction.customId);
             if (!role) {
                 interaction.editReply({
@@ -46,36 +48,40 @@ client.on('interactionCreate', async(interaction) => {
                 })
                 return;
             }
-                
+            
+            // Check to see if the user has the role already
             const hasRole = interaction.member.roles.cache.has(role.id);
             if (hasRole) {
                 await interaction.member.roles.remove(role);
                 await interaction.editReply(`The role ${role} has been removed.`);
                 return;
             }
-        
+            
+            // Add the role
             await interaction.member.roles.add(role);
             await interaction.editReply(`The role ${role} has been added.`);
         }
-
+    
+    // Log to console if error
     } catch (error) {
-        console.log(error);
+        console.log(currentDateTime.toLocaleString() + ': ' + error);
     }
         
-    // If it's not a chat input command, exit early
+    // Now we have handled buttons, check if interaction is not a chat input command, exit early as the bot has nothing else to do
     if(!interaction.isChatInputCommand()) return;
 
     // Gets the username of the person who interacted with the bot  
     const user = interaction.user;
 
-    // Handle the 'hey' command
+    // Handles the 'hey' command
     if (interaction.commandName === 'hey') {
         interaction.reply(`hey, ${user.displayName}!`);
-        console.log(`${user.username} ran the hey command`); 
+        console.log(currentDateTime.toLocaleString() + `: ${user.username} ran the hey command`); 
     }
 
-    // Handle the 'hello' command
+    // Handles the 'hello' command
     if(interaction.commandName === 'hello') {
+        // Gets the option that the user selected
         const userOption = interaction.options.get('user')?.value;
         if(userOption) {
             interaction.reply(`Hello, ${userOption.toString()}!`);
@@ -83,13 +89,13 @@ client.on('interactionCreate', async(interaction) => {
         else {
             interaction.reply('Hello World!');
         }
-        console.log(`${user.username} ran the hello command`);
+        console.log(currentDateTime.toLocaleString() + `: ${user.username} ran the hello command`);
     }   
 
     // Handle the 'ping' command
     if (interaction.commandName === 'ping') {
         interaction.reply('Pong!');
-        console.log(`${user.username} ran the ping command`);
+        console.log(currentDateTime.toLocaleString() + `: ${user.username} ran the ping command`);
     }
 
     // Handle the 'adder' command
@@ -101,7 +107,7 @@ client.on('interactionCreate', async(interaction) => {
         // Note that using ? such that interaction.options.get('second_number')?.value denotes optionality
         const result = firstNumber + secondNumber;
         interaction.reply(`The sum of ${firstNumber} and ${secondNumber} is ${result}!`);
-        console.log(`${user.username} ran the adder command`);
+        console.log(currentDateTime.toLocaleString() + `: ${user.username} ran the adder command`);
     }    
 
     // Handle the 'bye' command
@@ -113,12 +119,12 @@ client.on('interactionCreate', async(interaction) => {
         else {
             interaction.reply('Have a great day!');
         }
-        console.log(`${user.username} ran the bye command`);
+        console.log(currentDateTime.toLocaleString() + `: ${user.username} ran the bye command`);
     }
     
     // Handle the 'embed' command
     if(interaction.commandName === 'embed') {
-        // Exampled embedder that links to discord.js documentation
+        // Example embedder that links to the discord.js documentation
         const exambleEmbed = new EmbedBuilder()
         .setColor('Random')
         .setTitle('Some title')
@@ -147,9 +153,10 @@ client.on('messageCreate', message => {
     // Ignore messages from bots
     if (message.author.bot) return;  
     
-    console.log(message.author.username + ': ' + message.content)
+    console.log(currentDateTime.toLocaleString() + ': ' + message.author.username + ': ' + message.content)
 });
 
+// Logs errors and warnings
 client.on('error', console.error);
 client.on('warn', console.warn);
 
