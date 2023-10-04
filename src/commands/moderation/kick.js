@@ -1,18 +1,18 @@
 // Import necessary modules and classess from discord.js library
 const { ApplicationCommandOptionType, PermissionFlagsBits } = require("discord.js");
 
-// Export "ban" command module
+// Export "kick" command module
 module.exports = {
     // Command name and description
-    name: 'ban',
-    description: 'Bans a member from the server.',
+    name: 'kick',
+    description: 'Kicks a member from the server.',
 
-    // Command options which specify the target user and reason for ban
+    // Command options which specify the target user and reason for kick
     options: [
         {
             // Option name and description
             name: 'target-user',
-            description: 'The user you want to ban.',
+            description: 'The user you want to kick.',
 
             // Indicates that the option is a requirement of the slash command
             required: true,
@@ -23,15 +23,15 @@ module.exports = {
         {
             // Option name and description
             name: 'reason',
-            description: 'The reason you want to ban.',
+            description: 'The reason you want to kick.',
 
             // Option has to be of type string
             type: ApplicationCommandOptionType.String,
         },
     ],
     // Permissions required for a user/bot to execute this command
-    permissionsRequired : [PermissionFlagsBits.BanMembers],
-    botPermissions: [PermissionFlagsBits.BanMembers],
+    permissionsRequired : [PermissionFlagsBits.KickMembers],
+    botPermissions: [PermissionFlagsBits.KickMembers],
 
     // Callback function to execute when the command is invoked
     callback: async (client, interaction) => {
@@ -52,7 +52,7 @@ module.exports = {
 
         // If the target user is the owner of the server, reply with the appropriate response
         if (targetUserID === interaction.guild.ownerId) {
-            await interaction.editReply("You cannot ban the server owner.");
+            await interaction.editReply("You cannot kick the server owner.");
             return;
         }
 
@@ -63,25 +63,25 @@ module.exports = {
 
         // If the targetUser has a higher or equal rank to the interactionUser, reply with the appropriate response
         if (targetUserRolePosition >= requestUserRolePosition) {
-            await interaction.editReply("You cannot ban that user as they have the same/higher role than you.");
+            await interaction.editReply("You cannot kick that user as they have the same/higher role than you.");
             return;
         }
 
         // If the targetUser has a higher or equal rank to the bot, reply with the appropriate response
         if (targetUserRolePosition >= botRolePosition) {
-            await interaction.editReply("I cannot ban someone that is the same/higher role than me.");
+            await interaction.editReply("I cannot kick someone that is the same/higher role than me.");
             return;
         }
 
-        // Bans the targetUser
+        // Kick the targetUser
         try {
-            // Bans and let's the interactionUser know upon success
-            await targetUser.ban({ reason });
-            await interaction.editReply(`User: ${targetUser} was banned\nReason: ${reason}`);
+            // Kick and let's the interactionUser know upon success
+            await targetUser.kick({ reason });
+            await interaction.editReply(`User: ${targetUser} was kicked\nReason: ${reason}`);
         // Logs errors
         } catch (error) {
-            await interaction.editReply(`There was an error when banning ${targetUser}.`);
-            console.log(`There was an error in ban.js when banning: ${error}`)
-        } 
+            await interaction.editReply(`There was an error when kicking ${targetUser}.`);
+            console.log(`There was an error in kick.js when kick: ${error}`)
+        }
     },
 }
