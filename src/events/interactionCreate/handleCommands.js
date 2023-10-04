@@ -47,9 +47,8 @@ module.exports = async (client, interaction) => {
         } 
 
         // Checks if user has permissions to run the command
-        if (commandObject.permissionRequired?.length) {
-            for (const permission of commandObject.permissionRequired) {
-
+        if (commandObject.permissionsRequired?.length) {
+            for (const permission of commandObject.permissionsRequired) {
                 // If user doesn't have permision output a reasonable reply and return
                 if (!interaction.member.permissions.has(permission)) {
                     interaction.reply({
