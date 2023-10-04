@@ -1,78 +1,15 @@
-// Only need to run when initialising new commands
+// This script is run when initalising / removing slash commands
 // Load environment variables
 require('dotenv').config();
 
 // Import necessary modules and classess from discord.js library
-const { REST, Routes, ApplicationCommandOptionType } = require('discord.js');
+const { REST, Routes } = require('discord.js');
 
-// Command list
+// Command list to be registered
 const commands = [
-
-    // 'hey' command
-    {
-        name: 'hey',
-        description: 'Replies with hey!',
-    },
-
-    // 'ping' command
-    {
-        name: 'ping',
-        description: 'Pong!',
-    },
-
-    // 'hello' command
-    {
-        name: 'hello',
-        description: 'Replies with a greeting!',
-        options: [
-            {
-                name: 'user',
-                description: 'The user to greet',
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-        ],
-    },
-
-    // 'bye' command
-    {
-        name: 'bye',
-        description: 'Wishes you well!',
-        options: [
-            {
-                name: 'user',
-                description: 'The user to wish farewell',
-                type: ApplicationCommandOptionType.String,
-                required: false
-            },
-        ],
-    },
-
-    // 'adder' command
-    {
-        name: 'adder',
-        description: 'This command adds two numbers',
-        options: [
-            {
-                name: 'first_number',
-                description: 'Enter the first number to add',
-                type: ApplicationCommandOptionType.Number,
-                required: true
-            },
-            {
-                name: 'second_number',
-                description: 'Enter the second number to add',
-                type: ApplicationCommandOptionType.Number,
-                required: true
-            },
-        ],
-    },
-
-    // 'embed' command
-    {
-        name: 'embed',
-        description: 'Send an embed!',
-    }, 
+    // Removed commands since event handler has changed, empty will delete all commands, ready to remove this file
+    // NOTE TO SELF logic can be improved as we delete all commands before re-adding commands
+    // We could compare commands in command list to commands in server list and see if any have been edited, and edit them in the server, instead of adding or removing them
 ];
 
 // Creating a new instance of the REST class, specifying the API version and setting the token from the environment variable
@@ -91,7 +28,7 @@ const rest = new REST({ version: '10' }).setToken(process.env.TOKEN);
             Routes.applicationGuildCommands(process.env.CLIENT_ID, process.env.GUILD_ID)
         );
 
-        // Delete all old commands in server
+        // Delete all old slash commands in the server
         for (const oldCommand of oldCommands) {
             console.log(`Fetched command ${oldCommand.name}`)
             await rest.delete(

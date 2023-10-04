@@ -1,1 +1,4 @@
-.env
+# Protected environment variables
+.env  
+# Saved debugging options
+launch.json
