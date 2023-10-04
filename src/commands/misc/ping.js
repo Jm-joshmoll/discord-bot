@@ -4,21 +4,13 @@ module.exports = {
     name: 'ping',
     description: 'Pong!',
 
-    // Determines if command is only available for developers
-    // devOnly : Boolean, 
-
-    // Determines if command is only available for testing
-    testOnly: true, 
-
-    // Determines if it is to be deleted
-    // deleted: Boolean, 
-
-    // Determines any options given to the user
-    // options, Object[],
-
     // Callback function to execute when the command is invoked
-    callback: (client, interaction) => {
+    callback: async (client, interaction) => {
+        await interaction.deferReply();
+        const reply = await interaction.fetchReply();
+        const ping = reply.createdTimestamp - interaction.createdTimestamp;
+
         // Replies back with message and the bot's latency in ms
-        interaction.reply(`Pong! ${client.ws.ping}ms`);
+        interaction.editReply(`Pong! Client: ${ping}ms | Websocket: ${client.ws.ping}ms`);
     },
 };
