@@ -1,7 +1,7 @@
 // Load environment variables
 require('dotenv').config();
 
-// Import necessary modules and classess from discord.js library
+// Import necessary modules and classes
 const { Client, GatewayIntentBits } = require('discord.js');
 const eventHandler = require('./handlers/eventHandler');
 const mongoose = require('mongoose');
@@ -16,7 +16,7 @@ const client = new Client({
     ],
 });
 
-// Invoke immediately and connect to db
+// Invoke immediately and connect to database
 (async () => {
     try {
         mongoose.set('strictQuery', false);
@@ -25,11 +25,13 @@ const client = new Client({
 
         // Run the event handler
         eventHandler(client);
+        
+        // Log the bot into discord using the bot token
+        client.login(process.env.TOKEN);
+        
     // Logs error
     } catch (error) {
         console.log(`Error: ${error}`);
     }
 })();
 
-// Log the bot into discord using the bot token
-client.login(process.env.TOKEN);
