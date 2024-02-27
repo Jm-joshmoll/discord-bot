@@ -1,6 +1,6 @@
 // Import necessary modules and classess from discord.js library
 const { ApplicationCommandOptionType, AttachmentBuilder } = require("discord.js");
-const level = require("../../models/level");
+const Level = require("../../models/level");
 const calculateLevelXp = require("../../utils/calculateLevelXp");
 const { Font, RankCardBuilder } = require("canvacord");
 
@@ -42,7 +42,7 @@ module.exports = {
         const targetUserObj = await interaction.guild.members.fetch(targetUserId);
 
         // Fetches the target users level
-        const fetchedLevel = await level.findOne({
+        const fetchedLevel = await Level.findOne({
             userId: targetUserId,
             guildId: interaction.guild.id,
         });
@@ -58,12 +58,12 @@ module.exports = {
         };
 
         // Fetch all user levels and sort them in xp order
-        let allLevels = await level.find({guildId: interaction.guild.id}).select('-_id userId level xp');
+        let allLevels = await Level.find({guildId: interaction.guild.id}).select('-_id userId level xp');
         allLevels.sort((a, b) => {
-            if (a.level === b.level) {
+            if (a.Level === b.Level) {
                 return b.xp - a.xp;
             } else {
-                return b.level - a.level;
+                return b.Level - a.Level;
             }
         });
 
@@ -85,8 +85,8 @@ module.exports = {
             .setDisplayName(displayName)
             .setAvatar(targetUserObj.user.displayAvatarURL({ size: 256 }))
             .setCurrentXP(fetchedLevel.xp)
-            .setRequiredXP(calculateLevelXp(fetchedLevel.level))
-            .setLevel(fetchedLevel.level)
+            .setRequiredXP(calculateLevelXp(fetchedLevel.Level))
+            .setLevel(fetchedLevel.Level)
             .setRank(currentRank)
             .setStatus(status)
             .setBackground("https://media.discordapp.net/attachments/1157374421812641914/1211704931359399946/PIbVtMB.png?ex=65ef2b28&is=65dcb628&hm=a2a1afa86a9e507aa3477ca1ac1d8403b0b1d0adeeae6d5ab352a7b3f8867bb9&=&format=webp&quality=lossless&width=1609&height=905")
