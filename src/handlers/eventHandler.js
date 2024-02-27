@@ -1,11 +1,11 @@
 // Import the 'path' module to work with file and directory paths and utility function
 const path = require('path');
 const getAllFiles = require("../utils/getAllFiles");
+const translate = require('@iamtraction/google-translate');
 
 // Gets the current date and time
 let currentDateTime = new Date();
 
-// Exports the main event handler module
 module.exports = (client) => {
 
     // Fetch all folders in event folder
@@ -35,9 +35,57 @@ module.exports = (client) => {
 
         // Ignore messages from bots
         if (message.author.bot) return;  
-                
-            console.log(currentDateTime.toLocaleString() + ': ' + message.author.username + ': ' + message.content)
-        });
+    
+        console.log(currentDateTime.toLocaleString() + ': ' + message.author.username + ': ' + message.content)
+    });
+    
+    // Set up event listener for message context menu commands
+    client.on('interactionCreate', async (interaction) => {
+        // If not message context menu command exit
+        if (!interaction.isMessageContextMenuCommand()) return;
+
+        // If interaction is translate message
+        if (interaction.commandName === 'Translate message') {
+            const targetMessage = interaction.targetMessage.content;
+
+            // If there is no message let the user know
+            if (!targetMessage) {
+                return interaction.reply({
+                  content: 'Please use this command on a message.',
+                  ephemeral: true, // Make the response visible only to the user who used the command
+                });
+            }
+
+            const targetLanguage = 'en'; // Change this to the language code you want
+
+            try {
+                // Translate the message 
+                const translated = await translate(targetMessage, { to: targetLanguage });
+                interaction.reply(`Orginal message: ${targetMessage}\nTranslated message: ${translated.text}`);
+            // Log any erros
+            } catch (error) {
+                console.error('Translation Error:', error);
+                interaction.reply({
+                  content: 'An error occurred while translating the message.',
+                  ephemeral: true,
+                });                
+            }
+        }
+    })
+
+    // Set up event listener for user context menu commands
+    client.on('interactionCreate', (interaction) => {
+        // If not user context menu command exit
+        if (!interaction.isUserContextMenuCommand()) return;
+
+        if (interaction.commandName === 'User information') {
+            // Fetches the target user information
+            const targetUser = interaction.targetUser;
+
+            // Displays the target user information
+            interaction.reply(`Display Name: ${targetUser.globalName}\nUsername: ${targetUser.username}\nID: ${targetUser.id}\nTag: <@${targetUser.id}>`);
+        }
+    })
 
     // Log errors and warnings
     client.on('error', console.error);

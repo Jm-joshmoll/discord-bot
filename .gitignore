@@ -2,5 +2,3 @@
 .env  
 # Saved debugging options
 launch.json
-
-clear-commands.js
