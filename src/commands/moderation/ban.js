@@ -81,7 +81,7 @@ module.exports = {
         // Logs errors
         } catch (error) {
             await interaction.editReply(`There was an error when banning ${targetUser}.`);
-            console.log(`There was an error in ban.js when banning: ${error}`)
+            console.log(`There was an error in ban.js when banning: ${error}`);
         } 
     },
 }

@@ -81,7 +81,7 @@ module.exports = {
         // Logs errors
         } catch (error) {
             await interaction.editReply(`There was an error when kicking ${targetUser}.`);
-            console.log(`There was an error in kick.js when kicking: ${error}`)
+            console.log(`There was an error in kick.js when kicking: ${error}`);
         }
     },
 }

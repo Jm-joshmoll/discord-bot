@@ -106,7 +106,7 @@ module.exports = {
         // Logs errors
         } catch (error) {
             await interaction.editReply(`There was an error when timing out ${targetUser}.`);
-            console.log(`There was an error in timeout.js when timing out: ${error}`)
+            console.log(`There was an error in timeout.js when timing out: ${error}`);
         }
     },
 }
