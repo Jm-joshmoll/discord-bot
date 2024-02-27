@@ -7,7 +7,6 @@ const dailyAmount = 1000;
 
 // Export daily command module 
 module.exports = {
-
     // Command name and description
     name: 'daily',
     description: 'Collect your dailies!',
